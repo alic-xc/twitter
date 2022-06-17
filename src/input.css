@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#animated-input{
+
+}
+
+#animated-input span {
+}
+
+#animated-input input:focus ~ span{
+    color: #1d9bf0;
+    font-size: 12px;
+    font-weight: bold;
+    transform: translateY(-11px);
+    transition: 0.5s;
+}
+
+#animated-input input:focus{
+    border: 1px solid #1d9bf0;
+
+}
