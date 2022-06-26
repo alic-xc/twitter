@@ -2,13 +2,19 @@ import React from 'react'
 import BaseLayout from './components/BaseLayout';
 import { Grid } from '@mui/material';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import ClearIcon from '@mui/icons-material/Clear';
 import AppleIcon from '@mui/icons-material/Apple';
 import GoogleIcon from '@mui/icons-material/Google';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import * as Yup from 'yup';
+import { FormikWizard } from 'formik-wizard-form';
+
 
 const LoginScreen = () => {
     const navigate = useNavigate();
@@ -20,7 +26,7 @@ const LoginScreen = () => {
                 <TwitterIcon sx={{ fontSize: 300 }} className='text-white'  />
                 </div>
                 
-                <img src="https://abs.twimg.com/sticky/illustrations/lohp_en_1302x955.png" className="w-full h-[100%]" alt="twitter" />
+                <img src="https://abs.twimg.com/sticky/illustrations/lohp_en_1302x955.png" className="w-full h-[100%] object-none" alt="twitter" />
             </Grid>
             <Grid item xs={12} md={7} lg={5} className="py-20 px-10">
                 <TwitterIcon sx={{ fontSize: 60 }} className='dark:text-white text-[#1d9bf0] text-[50px] mb-10'  />
@@ -28,17 +34,17 @@ const LoginScreen = () => {
                 <p className="text-[32px] dark:text-white font-bold mb-5">Join Twitter today.</p>
                 <div className="w-[300px]">
                 <div className="w-full">
-                    <button className="p-2 px-10 w-full flex justify-center place-items-center text-center rounded-full dark:bg-white">
+                    <button className="p-2 px-10 w-full flex shadow-md justify-center place-items-center text-center rounded-full dark:bg-white">
                         <GoogleIcon /> <span className="text-[14px] ml-1 font-semibold">Sign up with Google</span>
                     </button>
-                    <button className="p-2 px-[10] w-full flex justify-center place-items-center mt-3 text-center rounded-full dark:bg-white">
+                    <button className="p-2 px-[10] w-full flex shadow-md justify-center place-items-center mt-3 text-center rounded-full dark:bg-white">
                         <AppleIcon/><span className="text-[14px] ml-1 font-bold">Sign up with Apple</span>
                     </button>
                 </div>
                 <div className="relative py-2 w-full">
-                    <span className="absolute right-1/2 top-[7px] dark:bg-white  block  rounded-full w-[20px] h-[20px] leading-4 text-[14px] text-center">or</span>
+                    <span className="absolute right-1/2 top-[7px] dark:bg-black dark:text-[#ddd]  block  rounded-full w-[20px] h-[20px] leading-4 text-[14px] text-center">or</span>
                     <hr className="my-2 border"/>
-                    <button className='block p-2 w-full text-[15px] px-2 font-semibold my-5 text-center rounded-full bg-[#1d9bf0] text-white'>Sign up with a phone number or em..</button>
+                    <button onClick={ () => navigate('/i/flow/signup')} className='block p-2 w-full text-[15px] px-2 font-semibold my-5 text-center rounded-full bg-[#1d9bf0] text-white'>Sign up with a phone number or em..</button>
                     <span className="text-[12px] block dark:text-[#71767b]">By signing up, you agree to the <button className="text-[#1d9bf0]">Terms of Service</button> and 
                     <button className="text-[#1d9bf0]">Privacy Policy</button>, including <button className="text-[#1d9bf0]">Cookie Use.</button></span>
                 </div>
@@ -88,6 +94,13 @@ const LoginScreen = () => {
 export const LoginForm = () => {
     const [displayLoginForm, setDisplayLoginForm] = React.useState(true)
     const navigate = useNavigate()
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const closeModal = () => {
+        setDisplayLoginForm(false); 
+        navigate('/') 
+    }
     return (
         <>
             <Dialog 
@@ -96,47 +109,129 @@ export const LoginForm = () => {
                 open={displayLoginForm} 
                 fullWidth={true}
                 maxWidth="sm"
-                onClose={ () => {setDisplayLoginForm(false); navigate('/') } }>
-                <DialogTitle className='dark:bg-black flex  '>
-                    <ClearIcon 
-                        className="w-20 h-20 mr-2  rounded-full transition duration-700 ease-in-out hover:dark:bg-[#333333] dark:text-white" />
-                    <div className="flex-1 flex justify-center">
-                        <TwitterIcon sx={{fontSize: 35}} className="w-20 h-20 mr-2 dark:text-[#ccc]" />
-                    </div>
-                </DialogTitle>
-                <DialogContent className='dark:bg-black '>
-                <div className="flex flex-col mx-auto w-[300px] pb-10 pt-5">
-                    <h2 className='dark:text-white text-[32px] font-bold mb-10'>Sign in Twitter</h2>
-                    <div className="w-full">
+                fullScreen={fullScreen}
+                className="rounded-[10px]"
+                onClose={ () => closeModal() }>
+                    <FormikWizard
+                        initialValues={{
+                        email: "",
+                        phone: "",
+                        password: "",
+                        }}
+                        onSubmit={(values) => {
 
-                        <button className="p-2 px-10 w-full flex justify-center place-items-center text-center rounded-full dark:bg-white">
-                            <GoogleIcon /> <span className="text-[14px] ml-1 font-semibold">Sign up with Google</span>
-                        </button>
-                        <button className="p-2 px-[10] w-full flex justify-center place-items-center mt-3 text-center rounded-full dark:bg-white">
-                            <AppleIcon/><span className="text-[14px] ml-1 font-bold">Sign up with Apple</span>
-                        </button>
-                    </div>
-                    <div className="relative py-2 w-full">
-                        <span className="absolute right-1/2 top-[7px] dark:bg-white  block  rounded-full w-[20px] h-[20px] leading-4 text-[14px] text-center">or</span>
-                        <hr className="my-2 border"/>
-                        <div className='relative  mt-[20px]' id="animated-input">
-                            <input type="text" className='w-full rounded-[5px] text-[#ddd] border-[#aaa] border bg-transparent outline-none p-4' />
-                            <span className='absolute left-0 p-4 pointer-events-none bg-transparent text-[#aaa]'>Phone, email address, or username</span>
+                        }}
+                        validateOnNext
+                        activeStepIndex={0}
+                        steps={[
+                        {
+                            component: EmailLoginForm,
+                            validationSchema: Yup.object().shape({
+                                email: Yup.string().email(),
+                                phone: Yup.string()
+                            })
+                        },
+                        {
+                            component: PasswordLoginForm,
+                            validationSchema: Yup.object().shape({
+                            password: Yup.string()
+                            })
+                        }
+                        ]}
+                >
+                    {({
+                        currentStepIndex,
+                        renderComponent,
+                        handlePrev,
+                        handleNext,
+                        isNextDisabled,
+                        isPrevDisabled
+                        }) => {
+                            return (
+                                <>
+                                <DialogTitle className='dark:bg-black flex'>
+                                    <ClearIcon 
+                                        onClick = {closeModal}
+                                        className="w-20 h-20 mr-2  rounded-full transition duration-700 ease-in-out hover:dark:bg-[#333333] dark:text-white" />
+                                    <div className="flex-1 flex justify-center">
+                                        <TwitterIcon sx={{fontSize: 35}} className="w-20 h-20 mr-2 dark:text-[#ccc]" />
+                                    </div>
+                                </DialogTitle>
+                                <DialogContent className='dark:bg-black '>
+                                    <div className={`flex-col mx-auto ${(currentStepIndex === 0)?'w-[300px]':'w-[450px]' } min-h-[550px] pb-10 pt-2`}>
+                                        {renderComponent()}
+                                        <div className={`w-full h-[250px] flex flex-col place-content-end `}>
+                                            {(currentStepIndex === 0) && (
+                                                <>
+                                                    <button onClick={ handleNext } className='block p-2 w-full text-[15px] px-2 font-semibold my-5 text-center rounded-full dark:bg-white dark:text-black bg-[#1d9bf0] text-white'>Next</button>                    
+                                                    <button className="block mt-5 w-full mb-10 dark:hover:border-[#1d9bf0] dark:hover:text-[#1d9bf0] border-[#1d9bf0] dark:border-[#aaa] p-2 text-[14px] px-8 font-semibold text-center rounded-full border dark:text-white text-[#1d9bf0]">Forgotten Password</button>
+                                                </>
+                                            ) }
+                                            { (currentStepIndex === 1) && (
+                                                <button className='block p-4 w-full text-[18px] px-2 font-semibold text-center rounded-full dark:bg-white dark:text-black bg-[#1d9bf0] text-white'>Log In</button>
+                                            ) }
+                                            <p className='mt-3 dark:text-[#ddd] text-[14px] font-semibold'> Don't have an account? <button className='text-[#1d9bf0]'>Sign up</button> </p>
+                                        </div>
 
-                        </div>
-                    </div>
-                    <div className=" w-full">
-                        <button className='block p-2 w-full text-[15px] px-2 font-semibold my-5 text-center rounded-full dark:bg-white dark:text-black bg-[#1d9bf0] text-white'>Next</button>
-                        <button onClick={ () => navigate('/i/flow/signup')} className="block mt-5 w-full border-[#1d9bf0] dark:border-[#aaa] p-2 text-[14px] px-8 font-semibold text-center rounded-full border dark:text-white text-[#1d9bf0]">Sign in</button>
-                        <p className='mt-10 dark:text-[#ddd] text-[14px] font-semibold'> Don't have an account? <button className='text-[#1d9bf0]'>Sign up</button> </p>
-                    </div>
-                </div> 
-                </DialogContent>
+                                    </div>
+                                </DialogContent>
+                                </>
+                            )}}
+                </FormikWizard>
             </Dialog> 
            
         </>
 
     )
   }
+
+
+const EmailLoginForm = () => {
+    return (
+            <>
+                <h2 className='dark:text-white text-[32px] font-bold mb-10'>Sign in Twitter</h2>
+                <div className="w-full">
+
+                    <button className="p-2 px-10 w-full flex justify-center place-items-center text-center rounded-full dark:bg-white">
+                        <GoogleIcon /> <span className="text-[14px] ml-1 font-semibold">Sign up with Google</span>
+                    </button>
+                    <button className="p-2 px-[10] w-full flex justify-center place-items-center mt-3 text-center rounded-full dark:bg-white">
+                        <AppleIcon/><span className="text-[14px] ml-1 font-bold">Sign up with Apple</span>
+                    </button>
+                </div>
+                <div className="relative py-2 w-full">
+                    <span className="absolute right-1/2 top-[7px] dark:bg-black dark:text-[#ddd]  block  rounded-full w-[20px] h-[20px] leading-4 text-[14px] text-center">or</span>
+                    <hr className="my-2 border"/>
+                    <div className='relative  mt-[20px] animated-input'>
+                        <input type="text" className='w-full rounded-[5px] text-[#ddd] border-[#aaa] border bg-transparent outline-none p-4' required/>
+                        <span className='absolute left-0 p-4 pointer-events-none bg-transparent text-[#aaa]'>Phone, email address, or username</span>
+                    </div>
+                </div>
+            </>
+
+    );
+}
+
+
+const PasswordLoginForm = () => {
+    return (
+        <div className='flex flex-col w-full '>
+            <h1 className='dark:text-white text-[30px] font-bold mb-7'>Enter your Password</h1>
+            <div className='text-[#71767b] bg-[#202327] p-1 px-4 rounded-[5px]'>
+                <span className='text-[12px]'>Email</span>
+                <p className='text-[16px] font-semibold'>user@gmail.com</p>
+            </div>
+            <div className='relative w-full  mt-[20px] animated-input'>
+                <input type="password" autoComplete="new-password" className='w-full rounded-[5px] text-[#ddd] border-[#aaa] border bg-transparent outline-none p-4' required />
+                <span className='absolute left-0 p-4 pointer-events-none bg-transparent text-[#aaa]'>Password</span>
+            </div>
+            <div>
+            <button className='text-[#1d9bf0] text-[12px] font-semibold mt-1'>Forgot password?</button>
+
+            </div>
+        </div>
+
+    );
+}
 
 export default LoginScreen;

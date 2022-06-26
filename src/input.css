@@ -9,7 +9,7 @@
 #animated-input span {
 }
 
-#animated-input input:focus ~ span{
+.animated-input input:valid ~ span, .animated-input input:focus ~ span{
     color: #1d9bf0;
     font-size: 12px;
     font-weight: bold;
@@ -17,7 +17,7 @@
     transition: 0.5s;
 }
 
-#animated-input input:focus{
+.animated-input input:focus{
     border: 1px solid #1d9bf0;
 
 }
